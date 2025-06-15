@@ -1,3 +1,36 @@
+<?php
+session_start();
+
+$serverName = "localhost";
+$database = "Gajiro";
+$dbUsername = ""; // your DB username
+$dbPassword = ""; // your DB password
+
+$Username = "User";
+
+// Check if the user is already authenticated
+if (isset($_SESSION['user_id'])) { // make sure this matches exactly what you set during login
+    $userId = $_SESSION['user_id'];
+
+    try {
+        $conn = new PDO("sqlsrv:server=$serverName;Database=$database", $dbUsername, $dbPassword);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $conn->prepare("SELECT username FROM users WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result && !empty($result['username'])) {
+            $Username = $result['username']; // Update Username to fetched name
+        }
+    } catch (PDOException $e) {
+        // Handle gracefully if something goes awry
+        $Username = "User";
+        // You may want to log this: error_log($e->getMessage()); 
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,19 +48,19 @@
     <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-fluid">
             <!-- Brand -->
-            <a class="navbar-brand text-light" href="main.html">Gajiro</a>
+            <a class="navbar-brand text-light" href="main.php">Gajiro</a>
 
             <!-- Nav Links on the left -->
             <div class="collapse navbar-collapse show" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link custom-link text-light" href="main.html">Home</a>
+                        <a class="nav-link custom-link text-light" href="main.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-link text-light" href="new_release.html">New Release</a>
+                        <a class="nav-link custom-link text-light" href="#">New Release</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-link text-light" href="about.html">About</a>
+                        <a class="nav-link custom-link text-light" href="#">About</a>
                     </li>
                 </ul>
 
@@ -45,7 +78,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle custom-link text-light" href="#" id="userDropdown"
                                 role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Mabuhay, User!
+                                Mabuhay, <?= htmlentities($Username) ?>!
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li><a class="dropdown-item" href="#">Profile</a></li>
@@ -53,7 +86,7 @@
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                                <li><a class="dropdown-item" href="#">Logout</a></li>
                             </ul>
                         </li>
                     </ul>

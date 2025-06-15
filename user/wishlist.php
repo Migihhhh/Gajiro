@@ -1,11 +1,10 @@
 <?php
 
 include("header.php");
-
 $server = "localhost";
 $database = "Gajiro";
-$username = "";
-$password = "";
+$username = ""; // Your database username
+$password = ""; // Your database password
 
 $options = [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -21,36 +20,46 @@ try {
 
 $userId = 6;
 
-// Handle removal if form is submitted
-if (isset($_POST['delete'])) {
-    $itemId = $_POST['item_id'];
+// Handle removal from wishlist
+if (isset($_POST['remove'])) {
+    $gameId = $_POST['game_id'];
 
-    $stmt = $pdo->prepare("DELETE FROM cart WHERE cart_id = ?");
-    $stmt->execute([$itemId]);
+    $stmt = $pdo->prepare("DELETE FROM wishlist WHERE user_id = ? AND game_id = ?");
+    $stmt->execute([$userId, $gameId]);
+
+    header("Location: wishlist.php");
+    exit;
+}
+
+// Handle adding to cart
+if (isset($_POST['add_to_cart'])) {
+    $gameId = $_POST['game_id'];
+
+    $stmt = $pdo->prepare("INSERT INTO cart (user_id, game_id, added_at) VALUES (?, ?, GETDATE())");
+    $stmt->execute([$userId, $gameId]);
 
     header("Location: cart.php");
     exit;
 }
 
-// Retrieve all items from the cart with game details
+// Retrieve wishlist items
 $stmt = $pdo->prepare("
-    SELECT cart.*, games.title, games.image_url, games.price
-    FROM cart
-    JOIN games ON cart.game_id = games.game_id
-    WHERE cart.user_id = ?
+    SELECT g.* FROM wishlist w
+    JOIN games g ON w.game_id = g.game_id
+    WHERE w.user_id = ?
 ");
 
 $stmt->execute([$userId]);
-$items = $stmt->fetchAll();
+$wishlist = $stmt->fetchAll();
 
-$total = 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Your Cart - Gajiro</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Your Wishlist - Gajiro</title>
     <link rel="stylesheet" href="main.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -82,8 +91,8 @@ $total = 0;
             color: #c6d4df;
         }
 
-        .btn-checkout {
-            width: 100%;
+        .btn-add {
+            width: 100px;
         }
 
         .game-img {
@@ -116,20 +125,22 @@ $total = 0;
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-fluid">
-            <a class="navbar-brand text-light" href="main.html">Gajiro</a>
+            <a class="navbar-brand text-light" href="main.php">Gajiro</a>
+
             <div class="collapse navbar-collapse show" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link custom-link text-light" href="main.php">Home</a></li>
-                    <li class="nav-item"><a class="nav-link custom-link text-light" href="main.php">New
+                    <li class="nav-item"><a class="nav-link custom-link text-light" href="new_release.html">New
                             Release</a></li>
-                    <li class="nav-item"><a class="nav-link custom-link text-light" href="#">About</a></li>
+                    <li class="nav-item"><a class="nav-link custom-link text-light" href="about.html">About</a></li>
                 </ul>
 
                 <div class="d-flex">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link custom-link text-light" href="cart.php">Cart</a></li>
-                        <li class="nav-item"><a class="nav-link custom-link text-light"
-                                href="wishlist.html">Wishlish</a></li>
+                        <li class="nav-item"><a class="nav-link custom-link text-light" href="wishlist.php">Wishlish</a>
+                        </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle custom-link text-light" id="userDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -151,35 +162,35 @@ $total = 0;
         </div>
     </nav>
 
-    <!-- Cart Section -->
+    <!-- Wishlist Section -->
     <div class="container mt-5">
-        <h2 class="mb-4">🛒 Your Cart</h2>
+        <h2 class="mb-4">❤️ Your Wishlist</h2>
 
         <div class="row g-3">
-            <?php foreach ($items as $item): ?>
+            <?php foreach ($wishlist as $game): ?>
                 <div class="col-md-12">
                     <div class="card p-3 d-flex flex-row align-items-center">
-                        <img src="<?php echo htmlentities($item['image_url']); ?>" class="game-img me-3" alt="Game Image">
+                        <img src="<?= htmlentities($game['image_url']); ?>" class="game-img me-3" alt="Game Image">
                         <div class="flex-grow-1">
-                            <h5 class="mb-1"><?php echo htmlentities($item['title']); ?></h5>
-                            <p class="mb-0 text-warning">₱<?php echo number_format($item['price'], 2); ?></p>
+                            <h5 class="mb-1"><?= htmlentities($game['title']); ?></h5>
+                            <p class="mb-0 text-warning">₱<?= number_format($game['price'], 2); ?></p>
                         </div>
-                        <form action="cart.php" method="POST">
-                            <input name="item_id" type="hidden" value="<?php echo $item['cart_id']; ?>">
-                            <button class="btn btn-outline-danger btn-sm ms-auto" name="delete" type="submit">
+                        <form action="wishlist.php" method="POST" class="me-2">
+                            <input name="game_id" type="hidden" value="<?= $game['game_id']; ?>">
+                            <button class="btn btn-outline-light btn-sm" name="add_to_cart" type="submit">
+                                Add to Cart
+                            </button>
+                        </form>
+
+                        <form action="wishlist.php" method="POST">
+                            <input name="game_id" type="hidden" value="<?= $game['game_id']; ?>">
+                            <button class="btn btn-outline-danger btn-sm" name="remove" type="submit">
                                 Remove
                             </button>
                         </form>
                     </div>
                 </div>
-                <?php $total += $item['price']; ?>
             <?php endforeach; ?>
-            <div class="col-md-12 mt-4">
-                <div class="card p-4">
-                    <h4>Total: ₱<?php echo number_format($total, 2); ?></h4>
-                    <a href="checkout.php" class="btn btn-success btn-checkout mt-3">Checkout</a>
-                </div>
-            </div>
         </div>
     </div>
 

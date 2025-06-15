@@ -1,4 +1,6 @@
 <?php
+include('header.php'); // starts session and sets $Username (optional)
+
 $server = "localhost";
 $database = "Gajiro";
 $username = ""; // Your database username
@@ -31,9 +33,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
 
     } elseif (isset($_POST['add'])) {
-        // Handle "Add to Wishlist" here if you want
+        // Handle "Add to Wishlist"
+
+        $gameId = $_POST['game_id'];
+
+        // Check if already in wishlist first
+        $stmt = $pdo->prepare("SELECT * FROM wishlist WHERE user_id = ? AND game_id = ?");
+        $stmt->execute([$userId, $gameId]);
+
+        if ($stmt->fetch()) {
+            // Already in wishlist
+            header("Location: wishlist.php");
+            exit;
+        }
+
+        // Otherwise, insert it
+        $stmt = $pdo->prepare("INSERT INTO wishlist (user_id, game_id, added_at) VALUES (?, ?, GETDATE())");
+
+        $stmt->execute([$userId, $gameId]);
+
+        header("Location: wishlist.php"); // After adding, view wishlist
+        exit;
     }
 }
+
 ?>
 
 <!-- game-details.html -->
@@ -73,10 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <a class="nav-link custom-link text-light" href="main.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-link text-light" href="new_release.html">New Release</a>
+                        <a class="nav-link custom-link text-light" href="#">New Release</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-link text-light" href="about.html">About</a>
+                        <a class="nav-link custom-link text-light" href="#">About</a>
                     </li>
                 </ul>
 
@@ -84,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="d-flex">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link custom-link text-light" href="cart.html">Cart</a>
+                            <a class="nav-link custom-link text-light" href="cart.php">Cart</a>
                         </li>
 
                         <li class="nav-item">
@@ -94,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle custom-link text-light" href="#" id="userDropdown"
                                 role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Mabuhay, User!
+                                Mabuhay, <?= htmlentities($Username) ?>!
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li><a class="dropdown-item" href="#">Profile</a></li>
