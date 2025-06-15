@@ -1,0 +1,97 @@
+
+
+body {
+    background-color: #1B2838;
+    color: #C7D5E0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* NAV */
+
+.custom-navbar {
+    background-color: #171A21 !important;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+}
+
+.custom-navbar .navbar-brand,
+.custom-link {
+    color: #C7D5E0 !important;
+    transition: 0.3s ease;
+}
+
+.custom-link:hover,
+.custom-link:focus,
+.custom-link.active {
+    color: #66C0F4 !important;
+    text-shadow: 0 0 5px #66C0F4;
+}
+
+
+.custom-navbar .navbar-brand {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.custom-link {
+    font-size: 1.2rem;
+    padding: 0.75rem 1rem;
+    margin-right: 1rem;
+}
+
+.navbar-toggler {
+    border-color: #C7D5E0;
+}
+
+.navbar-toggler-icon {
+    background-image: url("https://www.clipartmax.com/png/full/36-365828_navbar-toggle-icon-menu-hamburger-png-white.png");
+}
+
+/* CARDS */
+
+.card {
+    border: none;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(102, 192, 244, 0.3);
+}
+
+/* Make the entire card clickable */
+a.text-decoration-none {
+    display: block;
+    color: inherit;
+}
+
+a.text-decoration-none:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+a.text-decoration-none .card-title,
+a.text-decoration-none .card-text {
+    color: inherit;
+}
+
+/* Optional: pointer cursor for UX */
+.card {
+    border: none;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(102, 192, 244, 0.3);
+}
+
+.card-img-top {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+}
+
+
