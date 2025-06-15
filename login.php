@@ -19,16 +19,15 @@ try {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && $user["password"] === $passwordInput) {
-            // Store session info if needed
-            $_SESSION["user_id"] = $user["user_id"];
-            $_SESSION["username"] = $user["username"];
-            $_SESSION["is_creator"] = $user["is_creator"];
-
-            // Redirect based on role
+            // Store in sessions with lowercase keys
+            $_SESSION["user_id"] = $user["user_id"]; 
+            $_SESSION["username"] = $user["username"]; 
+            $_SESSION["is_creator"] = $user["is_creator"]; 
+ 
             if ($user["is_creator"]) {
-                header("Location: admin\admin_dashboard.html");
+                header("Location: admin/admin_dashboard.php");
             } else {
-                header("Location: user\main.php");
+                header("Location: user/main.php");
             }
             exit();
         } else {
