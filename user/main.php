@@ -1,5 +1,3 @@
-<?php include 'fetch_games.php'; ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,7 +35,7 @@
                 <div class="d-flex">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link custom-link text-light" href="cart.html">Cart</a>
+                            <a class="nav-link custom-link text-light" href="cart.php">Cart</a>
                         </li>
 
                         <li class="nav-item">

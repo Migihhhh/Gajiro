@@ -28,7 +28,7 @@ try {
             if ($user["is_creator"]) {
                 header("Location: admin\admin_dashboard.html");
             } else {
-                header("Location: user\main.html");
+                header("Location: user\main.php");
             }
             exit();
         } else {

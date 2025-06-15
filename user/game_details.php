@@ -1,3 +1,32 @@
+<?php
+$server = "localhost";
+$database = "Gajiro";
+$username = "";
+$password = "";
+
+// connect to Microsoft SQL (PDO + sqlsrv)
+try {
+    $conn = new PDO("sqlsrv:server=$server;Database=$database;");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+if (!isset($_GET['id'])) {
+    die("No game specified.");
+}
+
+$gameId = $_GET['id']; // or ?game_id if that's what you use in your URL
+
+$stmt = $conn->prepare("SELECT * FROM dbo.games WHERE game_id = ?");
+$stmt->execute([$gameId]);
+$game = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$game) {
+    die("Game not found.");
+}
+?>
+
 <!-- game-details.html -->
 <!DOCTYPE html>
 <html lang="en">
@@ -5,7 +34,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Game Details - Tala: Stars of the Bayan</title>
+    <title>Game Details - Gajiro</title>
     <link rel="stylesheet" href="main.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
@@ -26,13 +55,13 @@
     <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-fluid">
             <!-- Brand -->
-            <a class="navbar-brand text-light" href="main.html">Gajiro</a>
+            <a class="navbar-brand text-light" href="main.php">Gajiro</a>
 
             <!-- Nav Links on the left -->
             <div class="collapse navbar-collapse show" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link custom-link text-light" href="main.html">Home</a>
+                        <a class="nav-link custom-link text-light" href="main.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link custom-link text-light" href="new_release.html">New Release</a>
@@ -75,28 +104,33 @@
 
 
     <div class="container mt-5">
-        <a href="main.html" class="btn btn-outline-light mb-3">&larr; Back to Home</a>
+        <a href="main.php" class="btn btn-outline-light mb-3">&larr; Back to Home</a>
         <div class="row">
             <div class="col-md-6">
-                <img src="https://via.placeholder.com/600x300" class="game-img" alt="Game Image">
+                <img src="<?php echo htmlentities($game['image_url']); ?>" class="game-img"
+                    alt="<?php echo htmlentities($game['title']); ?>">
             </div>
             <div class="col-md-6">
-                <h1>Tala: Stars of the Bayan</h1>
-                <p class="lead">Explore the stars with Tala, a Filipina space explorer in a pixel-style RPG adventure
-                    game.</p>
-                <h4>₱299.00</h4>
-                <p class="text-warning">★★★★☆ (4.5)</p>
-                <button class="btn btn-warning">Add to Wishlist</button>
-                <button class="btn btn-success">Buy Now</button>
+                <h1><?php echo htmlentities($game['title']); ?></h1>
+                <p class="lead"><?php echo htmlentities($game['description']); ?></p>
+                <h4>₱<?php echo number_format($game['price'], 2); ?></h4>
+
+                <form action="add_to_cart.php" method="POST">
+                    <input name="game_id" type="hidden" value="<?php echo $game['game_id']; ?>">
+                    <button class="btn btn-warning" name="add" type="submit">
+                        Add to Wishlist
+                    </button>
+                    <button class="btn btn-success" name="buy" type="submit">
+                        Buy Now
+                    </button>
+                </form>
             </div>
         </div>
         <hr class="text-light mt-5" />
         <h3>Description</h3>
-        <p>
-            Tala is a pixel-art adventure game where you play as a brave Filipina astronaut navigating the unknown.
-            Solve puzzles, uncover secrets of the stars, and bring pride to the bayan!
-        </p>
+        <p><?php echo nl2br(htmlentities($game['description'])); ?></p>
     </div>
+
 
     <!-- Feedback Section -->
     <div class="container mt-5">
