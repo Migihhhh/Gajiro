@@ -1,29 +1,38 @@
 <?php
 $server = "localhost";
 $database = "Gajiro";
-$username = "";
-$password = "";
+$username = ""; // Your database username
+$password = ""; // Your database password
 
-// connect to Microsoft SQL (PDO + sqlsrv)
-try {
-    $conn = new PDO("sqlsrv:server=$server;Database=$database;");
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
+$options = [
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+];
+$pdo = new PDO("sqlsrv:server=$server;Database=$database", $username, $password, $options);
 
-if (!isset($_GET['id'])) {
-    die("No game specified.");
-}
+$gameId = $_GET['id']; // The game's ID from URL
 
-$gameId = $_GET['id']; // or ?game_id if that's what you use in your URL
-
-$stmt = $conn->prepare("SELECT * FROM dbo.games WHERE game_id = ?");
+$stmt = $pdo->prepare("SELECT * FROM games WHERE game_id = ?");
 $stmt->execute([$gameId]);
-$game = $stmt->fetch(PDO::FETCH_ASSOC);
+$game = $stmt->fetch();
 
-if (!$game) {
-    die("Game not found.");
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $userId = 6; // Ideally you'd retrieve this from your authenticated user
+
+    if (isset($_POST['buy'])) {
+        // Handle "Buy Now"
+        $gameId = $_POST['game_id'];
+
+        $stmt = $pdo->prepare("INSERT INTO cart (user_id, game_id, added_at) VALUES (?, ?, GETDATE())");
+
+        $stmt->execute([$userId, $gameId]);
+
+        header("Location: cart.php"); // Redirect directly to cart
+        exit;
+
+    } elseif (isset($_POST['add'])) {
+        // Handle "Add to Wishlist" here if you want
+    }
 }
 ?>
 
@@ -115,7 +124,7 @@ if (!$game) {
                 <p class="lead"><?php echo htmlentities($game['description']); ?></p>
                 <h4>₱<?php echo number_format($game['price'], 2); ?></h4>
 
-                <form action="add_to_cart.php" method="POST">
+                <form action="" method="POST">
                     <input name="game_id" type="hidden" value="<?php echo $game['game_id']; ?>">
                     <button class="btn btn-warning" name="add" type="submit">
                         Add to Wishlist
