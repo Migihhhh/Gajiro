@@ -54,6 +54,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         header("Location: wishlist.php"); // After adding, view wishlist
         exit;
+    } elseif (isset($_POST['submit_review'])) {
+        // Handle Review submission
+        $rating = $_POST['rating'];
+        $review = $_POST['review'];
+
+        $stmt = $pdo->prepare("INSERT INTO ratings (user_id, game_id, rating, review, rated_at) VALUES (?, ?, ?, ?, GETDATE())");
+
+        $stmt->execute([$userId, $gameId, $rating, $review]);
+
+        header("Location: game_details.php?id=$gameId"); // refresh page to show the new review
+        exit;
     }
 }
 
@@ -111,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link custom-link text-light" href="wishlist.html">Wishlish</a>
+                            <a class="nav-link custom-link text-light" href="wishlist.php">Wishlish</a>
                         </li>
 
                         <li class="nav-item dropdown">
@@ -161,18 +172,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <hr class="text-light mt-5" />
         <h3>Description</h3>
         <p><?php echo nl2br(htmlentities($game['description'])); ?></p>
-    </div>
+
+        <hr class="text-light" />
+
+        <h3 class="text-light mt-5">Reviews</h3>
+
+        <?php
+        $stmt = $pdo->prepare("
+    SELECT r.*, u.username FROM ratings r
+    JOIN users u ON r.user_id = u.user_id
+    WHERE r.game_id = ?
+    ORDER BY rated_at DESC
+");
+
+        $stmt->execute([$gameId]);
+        $reviews = $stmt->fetchAll();
+
+        foreach ($reviews as $rev) {
+            echo '
+    <div class="card bg-dark text-light mb-3">
+        <div class="card-body">
+            <h5>' . str_repeat('★', $rev['rating']) . '</h5>
+            <p>' . htmlentities($rev['review']) . '</p>
+            <footer class="blockquote-footer text-light">by <cite>' . htmlentities($rev['username']) . '</cite></footer>
+            <small>' . $rev['rated_at'] . '</small>
+        </div>
+    </div>';
+        }
+        ?>
 
 
-    <!-- Feedback Section -->
-    <div class="container mt-5">
-        <hr class="text-light mt-5" />
-        <h3 class="text-light">Leave a Review</h3>
-        <form action="submit_feedback.php" method="POST" class="text-light">
-            <!-- Hidden game ID -->
-            <input type="hidden" name="game_id" value="123"> <!-- Replace with dynamic game ID -->
+        <h3 class="text-light mt-5">Leave a Review</h3>
 
-            <!-- Star Rating -->
+        <form action="" method="POST" class="text-light">
+            <input name="game_id" type="hidden" value="<?php echo $game['game_id']; ?>">
             <div class="mb-3">
                 <label class="form-label">Your Rating:</label>
                 <select name="rating" class="form-select bg-dark text-light" required>
@@ -185,38 +218,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </select>
             </div>
 
-            <!-- Review Comment -->
             <div class="mb-3">
                 <label class="form-label">Comment (optional):</label>
-                <textarea name="comment" class="form-control bg-dark text-light" rows="3"
+                <textarea name="review" class="form-control bg-dark text-light" rows="3"
                     placeholder="Write something..."></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit Review</button>
+            <button type="submit" name="submit_review" class="btn btn-primary">Submit Review</button>
         </form>
+
     </div>
 
-    <!-- Feedback Display -->
-    <div class="container mt-5">
-        <h4 class="text-light">What Players Are Saying</h4>
 
-        <!-- Example Review -->
-        <div class="card bg-dark text-light mb-3">
-            <div class="card-body">
-                <h5 class="card-title">★★★★★</h5>
-                <p class="card-text">Absolutely loved the story and pixel art!</p>
-                <footer class="blockquote-footer text-light">by <cite>User123</cite></footer>
-            </div>
-        </div>
-
-        <div class="card bg-dark text-light mb-3">
-            <div class="card-body">
-                <h5 class="card-title">★★★☆☆</h5>
-                <p class="card-text">Good game, but needs bug fixes.</p>
-                <footer class="blockquote-footer text-light">by <cite>GamerGirl</cite></footer>
-            </div>
-        </div>
-    </div>
+    <!-- Feedback Section -->
 
     <hr class="text-light" />
 

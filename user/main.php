@@ -72,7 +72,7 @@ if (isset($_SESSION['user_id'])) { // make sure this matches exactly what you se
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link custom-link text-light" href="wishlist.html">Wishlish</a>
+                            <a class="nav-link custom-link text-light" href="wishlist.php">Wishlish</a>
                         </li>
 
                         <li class="nav-item dropdown">
@@ -86,7 +86,7 @@ if (isset($_SESSION['user_id'])) { // make sure this matches exactly what you se
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="#">Logout</a></li>
+                                <li><a class="dropdown-item" href="../login.html">Logout</a></li>
                             </ul>
                         </li>
                     </ul>

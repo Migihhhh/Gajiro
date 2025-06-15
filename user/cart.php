@@ -129,7 +129,7 @@ $total = 0;
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link custom-link text-light" href="cart.php">Cart</a></li>
                         <li class="nav-item"><a class="nav-link custom-link text-light"
-                                href="wishlist.html">Wishlish</a></li>
+                                href="wishlist.php">Wishlish</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle custom-link text-light" id="userDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
