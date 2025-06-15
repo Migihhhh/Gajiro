@@ -1,6 +1,7 @@
 <?php
 
 include("header.php");
+
 $server = "localhost";
 $database = "Gajiro";
 $username = ""; // Your database username
@@ -18,7 +19,12 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-$userId = 6;
+// User must be authenticated first
+if (!isset($_SESSION['user_id'])) {
+    die("Please login first.");
+}
+
+$userId = $_SESSION['user_id']; // Currently authenticated user's id
 
 // Handle removal from wishlist
 if (isset($_POST['remove'])) {
@@ -35,7 +41,7 @@ if (isset($_POST['remove'])) {
 if (isset($_POST['add_to_cart'])) {
     $gameId = $_POST['game_id'];
 
-    $stmt = $pdo->prepare("INSERT INTO cart (user_id, game_id, added_at) VALUES (?, ?, GETDATE())");
+    $stmt = $pdo->prepare(" INSERT INTO cart (user_id, game_id, added_at) VALUES (?, ?, GETDATE()) ");
     $stmt->execute([$userId, $gameId]);
 
     header("Location: cart.php");

@@ -28,8 +28,21 @@ if ($creatorId === false) {
     die("This user is not a creator.");
 }
 
-$gameId = $_GET['id'];
+$gameId = $_GET['id']; // The game we want to delete
 
+// First delete related reviews
+$stmt = $pdo->prepare("DELETE FROM ratings WHERE game_id = ?");
+$stmt->execute([$gameId]);
+
+// Next delete related wishlist entries
+$stmt = $pdo->prepare("DELETE FROM wishlist WHERE game_id = ?");
+$stmt->execute([$gameId]);
+
+// Next delete related payments
+$stmt = $pdo->prepare("DELETE FROM payment WHERE game_id = ?");
+$stmt->execute([$gameId]);
+
+// Finally delete the game itself
 $stmt = $pdo->prepare("DELETE FROM games WHERE game_id = ? AND creator_id = ?");
 $stmt->execute([$gameId, $creatorId]);
 

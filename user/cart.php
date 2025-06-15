@@ -1,11 +1,12 @@
 <?php
+session_start();
 
 include("header.php");
 
 $server = "localhost";
 $database = "Gajiro";
-$username = "";
-$password = "";
+$username = ""; // Your dbUsername
+$password = ""; // Your dbPass
 
 $options = [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -19,7 +20,12 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-$userId = 6;
+// User must be authenticated first
+if (!isset($_SESSION['user_id'])) {
+    die("Please login first.");
+}
+
+$userId = $_SESSION['user_id']; // Currently authenticated user's id
 
 // Handle removal if form is submitted
 if (isset($_POST['delete'])) {
@@ -128,8 +134,8 @@ $total = 0;
                 <div class="d-flex">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link custom-link text-light" href="cart.php">Cart</a></li>
-                        <li class="nav-item"><a class="nav-link custom-link text-light"
-                                href="wishlist.php">Wishlish</a></li>
+                        <li class="nav-item"><a class="nav-link custom-link text-light" href="wishlist.">Wishlish</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle custom-link text-light" id="userDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">

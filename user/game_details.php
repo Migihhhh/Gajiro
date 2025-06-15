@@ -12,6 +12,13 @@ $options = [
 ];
 $pdo = new PDO("sqlsrv:server=$server;Database=$database", $username, $password, $options);
 
+// User must be authenticated first
+if (!isset($_SESSION['user_id'])) {
+    die("Please login first.");
+}
+
+$userId = $_SESSION['user_id']; // Currently authenticated user's id
+
 $gameId = $_GET['id']; // The game's ID from URL
 
 $stmt = $pdo->prepare("SELECT * FROM games WHERE game_id = ?");
@@ -19,14 +26,12 @@ $stmt->execute([$gameId]);
 $game = $stmt->fetch();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $userId = 6; // Ideally you'd retrieve this from your authenticated user
 
     if (isset($_POST['buy'])) {
         // Handle "Buy Now"
         $gameId = $_POST['game_id'];
 
-        $stmt = $pdo->prepare("INSERT INTO cart (user_id, game_id, added_at) VALUES (?, ?, GETDATE())");
-
+        $stmt = $pdo->prepare(" INSERT INTO cart (user_id, game_id, added_at) VALUES (?, ?, GETDATE()) ");
         $stmt->execute([$userId, $gameId]);
 
         header("Location: cart.php"); // Redirect directly to cart
@@ -48,19 +53,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Otherwise, insert it
-        $stmt = $pdo->prepare("INSERT INTO wishlist (user_id, game_id, added_at) VALUES (?, ?, GETDATE())");
-
+        $stmt = $pdo->prepare(" INSERT INTO wishlist (user_id, game_id, added_at) VALUES (?, ?, GETDATE()) ");
         $stmt->execute([$userId, $gameId]);
 
         header("Location: wishlist.php"); // After adding, view wishlist
         exit;
+
     } elseif (isset($_POST['submit_review'])) {
         // Handle Review submission
         $rating = $_POST['rating'];
         $review = $_POST['review'];
 
-        $stmt = $pdo->prepare("INSERT INTO ratings (user_id, game_id, rating, review, rated_at) VALUES (?, ?, ?, ?, GETDATE())");
-
+        $stmt = $pdo->prepare(" INSERT INTO ratings (user_id, game_id, rating, review, rated_at) VALUES (?, ?, ?, ?, GETDATE()) ");
         $stmt->execute([$userId, $gameId, $rating, $review]);
 
         header("Location: game_details.php?id=$gameId"); // refresh page to show the new review
