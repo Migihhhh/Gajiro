@@ -99,7 +99,7 @@ $games = $stmt->fetchAll();
                     <span class="nav-link">Mabuhay, <?= htmlentities($username) ?>!</span>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="login.php">Logout</a>
+                    <a class="nav-link" href="logout.php">Logout</a>
                 </li>
             </ul>
         </div>

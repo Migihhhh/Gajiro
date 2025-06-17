@@ -57,42 +57,103 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <head>
     <meta charset="UTF-8">
-    <title>Edit Game</title>
+    <title>Edit <?= htmlentities($game['title']) ?> - Gajiro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #1b2838;
+            color: #c6d4df;
+        }
+
+        .form-label {
+            color: #c6d4df;
+        }
+
+        .form-control {
+            background: #2a475e;
+            color: #c6d4df;
+            border: none;
+        }
+
+        .form-control::placeholder {
+            color: #97a9c5;
+        }
+
+        .btn-primary {
+            background: #3c6382;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #4a79a5;
+        }
+
+        .btn-secondary {
+            background: #2a475e;
+            color: #c6d4df;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background: #3c6382;
+        }
+
+        h2 {
+            color: #ffffff;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: #1f1f1f;
+            color: #c6d4df;
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px 5px #000;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container mt-5">
-        <h2>Edit <?= htmlentities($game['title']) ?></h2>
-        <form action="" method="POST">
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input id="title" name="title" class="form-control" value="<?= htmlentities($game['title']) ?>"
-                    required>
-            </div>
+        <div class="card">
+            <h2>Edit <?= htmlentities($game['title']) ?></h2>
+            <form action="" method="POST">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input id="title" name="title" class="form-control" value="<?= htmlentities($game['title']) ?>"
+                        required>
+                </div>
 
-            <div class="mb-3">
-                <label for="desc" class="form-label">Description</label>
-                <textarea id="desc" name="description" class="form-control" rows="4"
-                    required><?= htmlentities($game['description']) ?></textarea>
-            </div>
+                <div class="mb-3">
+                    <label for="desc" class="form-label">Description</label>
+                    <textarea id="desc" name="description" class="form-control" rows="4"
+                        required><?= htmlentities($game['description']) ?></textarea>
+                </div>
 
-            <div class="mb-3">
-                <label for="price" class="form-label">Price (₱)</label>
-                <input id="price" name="price" type="number" class="form-control"
-                    value="<?= htmlentities($game['price']) ?>" required>
-            </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price (₱)</label>
+                    <input id="price" name="price" type="number" class="form-control"
+                        value="<?= htmlentities($game['price']) ?>" required min="0">
+                </div>
 
-            <div class="mb-3">
-                <label for="image_url" class="form-label">Image URL</label>
-                <input id="image_url" name="image_url" type="url" class="form-control"
-                    value="<?= htmlentities($game['image_url']) ?>" required>
-            </div>
+                <div class="mb-3">
+                    <label for="image_url" class="form-label">Image URL</label>
+                    <input id="image_url" name="image_url" type="url" class="form-control"
+                        value="<?= htmlentities($game['image_url']) ?>" required>
+                </div>
 
-            <button type="submit" class="btn btn-primary">Save</button>
-            <a href="admin_games.php" class="btn btn-secondary">Cancel</a>
-        </form>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="admin_games.php" class="btn btn-secondary ml-2">Cancel</a>
+            </form>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

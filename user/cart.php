@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 include("header.php");
 
@@ -122,40 +121,54 @@ $total = 0;
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-fluid">
-            <a class="navbar-brand text-light" href="main.html">Gajiro</a>
+            <!-- Brand -->
+            <a class="navbar-brand text-light" href="main.php">Gajiro</a>
+
+            <!-- Nav Links on the left -->
             <div class="collapse navbar-collapse show" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link custom-link text-light" href="main.php">Home</a></li>
-                    <li class="nav-item"><a class="nav-link custom-link text-light" href="main.php">New
-                            Release</a></li>
-                    <li class="nav-item"><a class="nav-link custom-link text-light" href="#">About</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link custom-link text-light" href="main.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link custom-link text-light" href="under_construction.html">New Release</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link custom-link text-light" href="under_construction.html">About</a>
+                    </li>
                 </ul>
 
+                <!-- Sign In button on the right -->
                 <div class="d-flex">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link custom-link text-light" href="cart.php">Cart</a></li>
-                        <li class="nav-item"><a class="nav-link custom-link text-light" href="wishlist.">Wishlish</a>
+                        <li class="nav-item">
+                            <a class="nav-link custom-link text-light" href="cart.php">Cart</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link custom-link text-light" href="wishlist.php">Wishlish</a>
+                        </li>
+
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle custom-link text-light" id="userDropdown" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle custom-link text-light" href="#" id="userDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Mabuhay, <?= htmlentities($Username) ?>!
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="">Profile</a></li>
-                                <li><a class="dropdown-item" href="">Settings</a></li>
+                                <li><a class="dropdown-item" href="under_construction.html">Profile</a></li>
+                                <li><a class="dropdown-item" href="under_construction.html">Settings</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="">Logout</a></li>
+                                <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                             </ul>
                         </li>
                     </ul>
                 </div>
-
             </div>
         </div>
     </nav>
+
 
     <!-- Cart Section -->
     <div class="container mt-5">

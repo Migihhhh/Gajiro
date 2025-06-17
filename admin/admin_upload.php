@@ -18,6 +18,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userId = $_SESSION['user_id']; // Currently authenticated user's id
+$username = $_SESSION['username'];
 
 // Check if this user is a creator
 $stmt = $pdo->prepare("SELECT creator_id FROM creators WHERE user_id = ?");
@@ -102,17 +103,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-dark px-3">
-        <a class="navbar-brand" href="#">Gajiro Dev Panel</a>
+        <a class="navbar-brand" href="">Gajiro Dev Panel</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="admin_dashboard.php">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin_games.php">Manage Games</a></li>
+                <li class="nav-item"><a class="nav-link" href="admin_upload.php">Upload Game</a></li>
+            </ul>
+
+            <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="admin_dashboard.php">Dashboard</a>
+                    <span class="nav-link">Mabuhay, <?= htmlentities($username) ?>!</span>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="admin_games.php">Manage Games</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="admin_upload.php">Upload Game</a>
+                    <a class="nav-link" href="logout.php">Logout</a>
                 </li>
             </ul>
         </div>
@@ -135,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <div class="mb-3">
                 <label for="price" class="form-label">Price (₱)</label>
-                <input type="number" class="form-control" id="price" name="price" placeholder="e.g. 299" required>
+                <input type="number" class="form-control" id="price" name="price" placeholder="e.g. 299" required min="0">
             </div>
 
             <div class="mb-3">

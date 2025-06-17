@@ -111,10 +111,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <a class="nav-link custom-link text-light" href="main.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-link text-light" href="#">New Release</a>
+                        <a class="nav-link custom-link text-light" href="under_construction.html">New Release</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-link text-light" href="#">About</a>
+                        <a class="nav-link custom-link text-light" href="under_construction.html">About</a>
                     </li>
                 </ul>
 
@@ -135,12 +135,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 Mabuhay, <?= htmlentities($Username) ?>!
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li><a class="dropdown-item" href="under_construction.html">Profile</a></li>
+                                <li><a class="dropdown-item" href="under_construction.html">Settings</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="#">Logout</a></li>
+                                <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -148,6 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </nav>
+
 
 
     <div class="container mt-5">

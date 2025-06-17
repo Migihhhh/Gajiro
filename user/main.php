@@ -57,10 +57,10 @@ if (isset($_SESSION['user_id'])) { // make sure this matches exactly what you se
                         <a class="nav-link custom-link text-light" href="main.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-link text-light" href="#">New Release</a>
+                        <a class="nav-link custom-link text-light" href="under_construction.html">New Release</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link custom-link text-light" href="#">About</a>
+                        <a class="nav-link custom-link text-light" href="under_construction.html">About</a>
                     </li>
                 </ul>
 
@@ -81,12 +81,12 @@ if (isset($_SESSION['user_id'])) { // make sure this matches exactly what you se
                                 Mabuhay, <?= htmlentities($Username) ?>!
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li><a class="dropdown-item" href="under_construction.html">Profile</a></li>
+                                <li><a class="dropdown-item" href="under_construction.html">Settings</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="../login.html">Logout</a></li>
+                                <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                             </ul>
                         </li>
                     </ul>
